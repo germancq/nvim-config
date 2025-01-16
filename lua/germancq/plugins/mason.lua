@@ -27,13 +27,11 @@ return {
 				"isort", -- python formatter
 				"black", -- python formatter
 				"pylint", -- python linter
-				"verible", --verilog and systemVerilog formatter
 			},
 		})
 		mason_lspconfig.setup({
 			ensure_installed = {
 				"pyright",
-				"verible",
 				"lua_ls",
 				"marksman",
 				"pylsp",

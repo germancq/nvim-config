@@ -8,7 +8,7 @@ return {
 	config = function()
 		local nvim_lsp = require("lspconfig")
 		local mason_lspconfig = require("mason-lspconfig")
-
+		vim.lsp.set_log_level("debug")
 		local protocol = require("vim.lsp.protocol")
 
 		local on_attach = function(client, bufnr)

@@ -1,55 +1,41 @@
 return {
-	"hrsh7th/nvim-cmp",
-	event = "InsertEnter",
-	dependencies = {
-		"hrsh7th/cmp-buffer", -- source for text in buffer
-		"hrsh7th/cmp-path", -- source for file system paths
-		{
-			"L3MON4D3/LuaSnip",
-			version = "v2.*",
-			-- install jsregexp (optional!).
-			build = "make install_jsregexp",
+	-- Plugin para autocompletado
+	{
+		"hrsh7th/nvim-cmp",
+		dependencies = {
+			"hrsh7th/cmp-nvim-lsp", -- Integración con LSP
+			"hrsh7th/cmp-buffer", -- Autocompletado basado en el buffer
+			"hrsh7th/cmp-path", -- Autocompletado basado en el sistema de archivos
+			"saadparwaiz1/cmp_luasnip", -- Integración de nvim-cmp con LuaSnip
+			"L3MON4D3/LuaSnip", -- LuaSnip para snippets
 		},
-		"rafamadriz/friendly-snippets",
-		"onsails/lspkind.nvim", -- vs-code like pictograms
+		config = function()
+			local cmp = require("cmp")
+			local luasnip = require("luasnip")
+
+			-- Configuración de nvim-cmp
+			cmp.setup({
+				snippet = {
+					expand = function(args)
+						luasnip.lsp_expand(args.body) -- Expande los snippets con LuaSnip
+					end,
+				},
+				mapping = {
+					["<C-p>"] = cmp.mapping.select_prev_item(),
+					["<C-n>"] = cmp.mapping.select_next_item(),
+					["<C-y>"] = cmp.mapping.confirm({ select = true }),
+					["<C-e>"] = cmp.mapping.abort(),
+				},
+				sources = {
+					{ name = "nvim_lsp" }, -- Autocompletado LSP
+					{ name = "buffer" }, -- Autocompletado basado en el buffer
+					{ name = "path" }, -- Autocompletado basado en el sistema de archivos
+					{ name = "luasnip" }, -- Autocompletado de snippets
+				},
+			})
+
+			-- Cargar snippets predeterminados de VSCode
+			require("luasnip.loaders.from_vscode").lazy_load()
+		end,
 	},
-	config = function()
-		local cmp = require("cmp")
-		local lspkind = require("lspkind")
-		local luasnip = require("luasnip")
-
-		require("luasnip.loaders.from_vscode").lazy_load()
-
-		cmp.setup({
-			snippet = {
-				expand = function(args)
-					luasnip.lsp_expand(args.body)
-				end,
-			},
-			mapping = cmp.mapping.preset.insert({
-				["<C-d>"] = cmp.mapping.scroll_docs(-4),
-				["<C-f>"] = cmp.mapping.scroll_docs(4),
-
-				["<C-n>"] = cmp.mapping.select_next_item(),
-				["<C-p>"] = cmp.mapping.select_prev_item(),
-				["<C-Space>"] = cmp.mapping.complete(),
-				["<C-e>"] = cmp.mapping.close(),
-				["<CR>"] = cmp.mapping.confirm({
-					behavior = cmp.ConfirmBehavior.Replace,
-					select = true,
-				}),
-			}),
-			sources = cmp.config.sources({
-				{ name = "nvim_lsp" },
-				{ name = "luasnip" },
-				{ name = "buffer" },
-				{ name = "path" },
-			}),
-		})
-
-		vim.cmd([[
-      set completeopt=menuone,noinsert,noselect
-      highlight! default link CmpItemKind CmpItemMenuDefault
-    ]])
-	end,
 }

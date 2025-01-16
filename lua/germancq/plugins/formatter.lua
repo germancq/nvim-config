@@ -19,8 +19,6 @@ return {
 				graphql = { "prettierd" },
 				lua = { "stylua" },
 				python = { "isort", "black" },
-				systemverilog = { "verible" },
-				verilog = { "verible" },
 			},
 			format_on_save = {
 				lsp_fallback = true,
