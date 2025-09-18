@@ -37,6 +37,7 @@ return {
 				"pylsp",
 				"texlab",
 				"arduino_language_server",
+				"clangd",
 				"ansiblels",
 				"docker_compose_language_service",
 				"jsonls",
