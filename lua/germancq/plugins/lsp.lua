@@ -11,6 +11,15 @@ return {
 		vim.lsp.set_log_level("debug")
 		local protocol = require("vim.lsp.protocol")
 
+		--FIX tinymist
+		local orig_start = vim.lsp.semantic_tokens.start
+		vim.lsp.semantic_tokens.start = function(client, bufnr)
+			if client.name == "tinymist" then
+				return
+			end
+			return orig_start(client, bufnr)
+		end
+
 		local on_attach = function(client, bufnr)
 			-- format on save
 			if client.server_capabilities.documentFormattingProvider then
