@@ -11,7 +11,7 @@ return {
 		vim.lsp.set_log_level("debug")
 		local protocol = require("vim.lsp.protocol")
 
-		--FIX tinymist
+		-- FIX tinymist
 		local orig_start = vim.lsp.semantic_tokens.start
 		vim.lsp.semantic_tokens.start = function(client, bufnr)
 			if client.name == "tinymist" then
@@ -21,8 +21,8 @@ return {
 		end
 
 		local on_attach = function(client, bufnr)
-			-- format on save
-			if client.server_capabilities.documentFormattingProvider then
+			-- format on save SOLO si NO es texlab
+			if client.server_capabilities.documentFormattingProvider and client.name ~= "texlab" then
 				vim.api.nvim_create_autocmd("BufWritePre", {
 					group = vim.api.nvim_create_augroup("Format", { clear = true }),
 					buffer = bufnr,
